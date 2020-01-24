@@ -2,8 +2,9 @@ const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
 const authRoutes = require('./auth/authRouters');
+const UniversidadRouters = require('./Rutas/UniversidadRouter')
 const config = require('./config');
-const rutas = express.Router();
+
 
 
 
@@ -22,7 +23,7 @@ app.use(bodyParserURLEncoded);
 
 app.use(cors());
 app.use('/api', router);
-
+UniversidadRouters(router);
 authRoutes(router);
 router.get('/', (req, res) => {
   res.send('Hello from home');
