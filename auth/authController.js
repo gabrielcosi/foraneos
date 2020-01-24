@@ -26,21 +26,14 @@ exports.createUser = (req,res,next)=>{
             console.log(req.body);
             return res.status(500).send('Server error asd '+ err
             )};
-        const expiresIn = 24 * 60 * 60;
-        const accessToken = jwt.sign({id: user.id},
-            SECRET_KEY,{
-                expiresIn : expiresIn
-            });
+            const expiresIn = 24 * 60 * 60;
             const dataUser = {
                 tipo    : user.tipo,
                 nombre  : user.nombre,
                 usuario : user.usuario,
-                opciones: user.opciones,
-                accessToken:accessToken,
-                expiresIn:expiresIn
             }
-        //response
-            res.send({dataUser});
+            const accessToken = jwt.sign({dataUser},SECRET_KEY,{expiresIn : expiresIn});
+            res.send({accessToken,opciones: user.opciones});
     });
 }
 exports.LoginUser = (req , res , next)=>{
@@ -58,17 +51,13 @@ exports.LoginUser = (req , res , next)=>{
             if (resultPassword) {
 
                 const expiresIn = 24 * 60 * 60;
-                const accessToken = jwt.sign({id: user.id},SECRET_KEY,{expiresIn : expiresIn});
-
                 const dataUser = {
                     tipo    : user.tipo,
                     nombre  : user.nombre,
                     usuario : user.usuario,
-                    opciones: user.opciones,
-                    accessToken:accessToken,
-                    expiresIn:expiresIn
                 }
-                res.send({dataUser});
+                const accessToken = jwt.sign({dataUser},SECRET_KEY,{expiresIn : expiresIn});
+                res.send({accessToken,opciones: user.opciones});
             }else{
                 //la contra no fue correcta
                 return res.status(409).send({message: 'Pucha man te equivocaste de nuevo'})
