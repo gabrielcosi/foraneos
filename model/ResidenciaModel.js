@@ -4,8 +4,12 @@ const Propietario = {
     usuario : Number,
     RUC : String
 }
+/// Coordenadas
+const Coordenadas = {longitud:String , latitud:String};
 /// Pisos
-const Pisos = [Cuartos]
+const Pisos = {
+    Nropiso:String,
+    cuartos:[Cuartos]}
 //// Cuartos
 const Cuartos = {
         nrcuarto : String,
@@ -28,10 +32,7 @@ var residenciasquema = moongose.Schema({
     id : {type : Number, require : true ,unique: true},
     propietario : Propietario,
     Cuartos : [Pisos],
-    Coordenadas : {
-            "longitud" : "15.000212120",
-            "latitud" : "02.011001110"
-    },
+    Coordenadas : Coordenadas,
     Universidad : Number
 });
 module.exports = residenciasquema;
