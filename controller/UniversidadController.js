@@ -9,6 +9,10 @@ exports.CrearUni = (req,res) =>{
 			res.sendStatus(403);
 		} else {
 			universidades.create(req.body.universidad,(err,doc)=>{
+				
+				if (err && err.code === 11000) {
+				return res.status(409).send('Universidad ya existe')
+			};if (err) {return res.send("falta un campo")} ;
 				res.send(doc);
 			});
 		}
