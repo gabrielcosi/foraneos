@@ -1,6 +1,7 @@
 const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
+const ResidenciaRouters = require('./Rutas/ResidenciaRouters')
 const authRoutes = require('./auth/authRouters');
 const UniversidadRouters = require('./Rutas/UniversidadRouter')
 const config = require('./config');
@@ -25,6 +26,7 @@ app.use(cors());
 app.use('/api', router);
 UniversidadRouters(router);
 authRoutes(router);
+ResidenciaRouters(router);
 router.get('/', (req, res) => {
   res.send('Hello from home');
 });

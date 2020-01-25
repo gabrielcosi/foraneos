@@ -1,18 +1,17 @@
 const jwt = require('jsonwebtoken');
 const universidades = require('../model/UniversidadModel')
-
+const SECRET_KEY = 'secretkey123';
 /////////////crear universidades
 
 exports.CrearUni = (req,res) =>{
-	jwt.verify(req.token, 'secretkey123', (err, data) => {
+	jwt.verify(req.token, SECRET_KEY, (err, data) => {
 		if(err) {
 			res.sendStatus(403);
 		} else {
 			universidades.create(req.body.universidad,(err,doc)=>{
 				
-				if (err && err.code === 11000) {
-				return res.status(409).send('Universidad ya existe')
-			};if (err) {return res.send("falta un campo")} ;
+				if (err && err.code === 11000) {return res.status(409).send('Universidad ya existe')};
+				if (err) {return res.send("falta un campo")} ;
 				res.send(doc);
 			});
 		}
@@ -24,7 +23,7 @@ exports.CrearUni = (req,res) =>{
 
 exports.ListarUni = (req , res )=>{
     console.log(req)
-    jwt.verify(req.token, 'secretkey123', (err, data) => {
+    jwt.verify(req.token, SECRET_KEY, (err, data) => {
 		if(err) {
 			res.sendStatus(403);
 		} else {
