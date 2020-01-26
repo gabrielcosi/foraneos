@@ -5,7 +5,6 @@ const SECRET_KEY = 'secretkey123';
 //  SECCION DE RESIDENCIA
 //// Crear Residencia
 exports.CrearResi = (req , res )=>{
-    console.log(req)
     jwt.verify(req.token, SECRET_KEY, (err, data) => {
 		if(err) {
 			res.sendStatus(403);
@@ -21,9 +20,45 @@ exports.CrearResi = (req , res )=>{
 	});
 }
 //// Actualizar Residencia
+exports.ActualizarResi = (req , res )=>{
+    
+    jwt.verify(req.token, SECRET_KEY, (err, data) => {
+		if(err) {
+			res.sendStatus(403);
+		} else {
+            var dato = {$set:{nombre:req.body.residencia.nombre}}
+            var id = req.params.id;
+			Residencia.updateMany({universidad: id},dato,(err,doc)=>{
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send("se guardo los datos " + req.body.residencia.nombre);    
+                }
+            });
+		}
+	});
+}
 
 //// Listar By Universidad
+exports.ListarByUni = (req , res )=>{
+    
 
+    jwt.verify(req.token, SECRET_KEY, (err, data) => {
+		if(err) {
+			res.sendStatus(403);
+		} else {
+            var id = req.params.id;
+			Residencia.find({universidad: id},(err,doc)=>{
+                if (err) {
+                    res.send(err)
+                } else {
+                    res.send(doc);
+                }
+                
+            });
+		}
+	});
+}
 
 //// Filtrador
 
@@ -53,9 +88,8 @@ exports.CrearResi = (req , res )=>{
 
 /////////hace la validacion del token
 exports.RevisarToken = (req , res , next) =>{
+    console.log('ID:', req.params.iduni);
     const bearerHeader = req.body.accessToken;
-    console.log(bearerHeader)
-	console.log(req.body.accessToken)
 	if(typeof bearerHeader !== 'undefined') {
 		const bearer = bearerHeader.split(" ");
 		const bearerToken = bearer[1];

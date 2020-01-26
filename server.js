@@ -29,7 +29,7 @@ authRoutes(router);
 ResidenciaRouters(router);
 router.get('/', (req, res) => {
   res.send('Hello from home');
-});
+}); 
 app.use(router);
 app.listen(3000);
 

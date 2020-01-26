@@ -41,6 +41,7 @@ exports.LoginUser = (req , res , next)=>{
         usuario:req.body.usuario,
         contra:req.body.contra
     }
+    console.log(req.body)
     User.findOne({
         usuario:userData.usuario},(err,user)=>{
         if (err) return res.status(500).send('Server error');
