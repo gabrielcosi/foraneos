@@ -27,12 +27,13 @@ exports.ActualizarResi = (req , res )=>{
 			res.sendStatus(403);
 		} else {
             var dato = {$set:{nombre:req.body.residencia.nombre}}
-            var id = req.params.id;
+            var id = req.params.iduni;
+            console.log("id :"+id)
 			Residencia.updateMany({universidad: id},dato,(err,doc)=>{
                 if (err) {
                     res.send(err);
                 } else {
-                    res.send("se guardo los datos " + req.body.residencia.nombre);    
+                    res.send("id :"+id+"se guardo los datos " + req.body.residencia.nombre);    
                 }
             });
 		}
@@ -52,6 +53,7 @@ exports.ListarByUni = (req , res )=>{
                 if (err) {
                     res.send(err)
                 } else {
+                    console.log(id)
                     res.send(doc);
                 }
                 
