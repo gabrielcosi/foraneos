@@ -66,6 +66,24 @@ exports.ListarByUni = (req , res )=>{
 
 //  SECCION DE CUARTOS
 //// Crear Cuartos
+exports.CrearCuartos = (req , res )=>{
+    
+
+    jwt.verify(req.token, SECRET_KEY, (err, data) => {
+		if(err) {
+			res.sendStatus(403);
+		} else {
+            var newCuarto=res.body.cuarto;
+            console.log(newCuarto)
+            const Cuarto={newCuarto};
+			Residencia. findOneAndUpdate({ _id: "5e2c9b27befa5e3e801124c5"  },{
+                $push: {
+                    cuartos:Cuarto
+                }
+            });
+		}
+	});
+}
 
 //// Encontrar Cuarto By Residencia
 

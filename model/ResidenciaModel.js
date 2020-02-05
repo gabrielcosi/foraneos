@@ -15,7 +15,7 @@ const Calificacion = {
     }
 }
 //// Cuartos
-const Cuartos = {
+const Cuartos = moongose.Schema({
     nrcuarto : String,
     amueblado : Boolean,
     ocupado:Boolean,
@@ -23,12 +23,12 @@ const Cuartos = {
     tipo : Number,
     costoreserva : Number,
     calificacion : [Calificacion]
-}
+});
 /// Pisos
-const Pisos = {
+const Pisos = moongose.Schema({
     Nropiso:String,
     cuartos:[Cuartos]
-}
+});
 var residenciasquema = moongose.Schema({
     nombre:{type : String, require : true ,unique: true},
     id : {type : Number, require : true ,unique: true},
