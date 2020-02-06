@@ -1,7 +1,7 @@
 const Residencia = require('../model/ResidenciaModel');
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = 'secretkey123';
-
+const cuartos = Residencia.piso;
 //  SECCION DE RESIDENCIA
 //// Crear Residencia
 exports.CrearResi = (req , res )=>{
@@ -67,23 +67,63 @@ exports.ListarByUni = (req , res )=>{
 //  SECCION DE CUARTOS
 //// Crear Cuartos
 exports.CrearCuartos = (req , res )=>{
-    
-
     jwt.verify(req.token, SECRET_KEY, (err, data) => {
 		if(err) {
 			res.sendStatus(403);
 		} else {
-            var newCuarto=res.body.cuarto;
-            console.log(newCuarto)
-            const Cuarto={newCuarto};
-			Residencia. findOneAndUpdate({ _id: "5e2c9b27befa5e3e801124c5"  },{
-                $push: {
-                    cuartos:Cuarto
+            //contador
+            var contador;
+            Residencia.countDocuments({id:req.params.id,"cuartos.Nropiso":req.params.piso},(err,cantidad)=>{
+                if (err) {
+                    res.json("mensaje: " + "pues no funco la verdad man");
+                }else{
+                    var newCuarto={cuarto:req.body.cuarto};
+                    console.log(newCuarto)
+                    ///Si Existe Ya El Piso
+                    if (cantidad > 0) { 
+                        Residencia.findOneAndUpdate({id: req.params.id,"cuartos.Nropiso":req.params.piso},
+                        {cuartos :{ cuartos: {$push :{
+                                nrcuarto: req.body.cuarto.nrcuarto,
+                                amueblado: req.body.cuarto.amueblado,
+                                ocupado: req.body.cuarto.ocupado,
+                                costo: req.body.cuarto.costo,
+                                tipo: req.body.cuarto.tipo,
+                                costoreserva: req.body.cuarto.costoreserva}}}},
+                                (err,doc)=>{
+                                    if (err) {
+                                        res.send({error:err});
+                                    } else {
+                                        res.send({mensaje:"OK"});
+                                    }
+                                });
+                    } 
+                    ///Si Aun No Existe Ya El Piso
+                    else {
+                        Residencia.findOneAndUpdate({id: req.params.id},
+                            {$push:{cuartos:{Nropiso : req.params.piso , 
+                                cuartos:{nrcuarto: req.body.cuarto.nrcuarto,
+                                amueblado: req.body.cuarto.amueblado,
+                                ocupado: req.body.cuarto.ocupado,
+                                costo: req.body.cuarto.costo,
+                                tipo: req.body.cuarto.tipo,
+                                costoreserva: req.body.cuarto.costoreserva}}}},
+                            (err,doc)=>{ 
+                            if (err) {
+                                res.send({error:err});
+                            } else {
+                                res.send({mensaje:"OK"});
+                            }
+                            
+                        });
+                    }
                 }
+                
             });
+            
 		}
 	});
 }
+//// Actualizar Cuarto
 
 //// Encontrar Cuarto By Residencia
 
