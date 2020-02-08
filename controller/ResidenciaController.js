@@ -72,33 +72,65 @@ exports.CrearCuartos = (req , res )=>{
 			res.sendStatus(403);
 		} else {
             //contador
+            
             var contador;
             Residencia.countDocuments({id:req.params.id,"cuartos.Nropiso":req.params.piso},(err,cantidad)=>{
                 if (err) {
                     res.json("mensaje: " + "pues no funco la verdad man");
                 }else{
                     var newCuarto={cuarto:req.body.cuarto};
-                    console.log(newCuarto)
                     ///Si Existe Ya El Piso
-                    if (cantidad > 0) { 
-                        Residencia.findOneAndUpdate({id: req.params.id,"cuartos.Nropiso":req.params.piso},
-                        {cuartos :{ cuartos: {$push :{
-                                nrcuarto: req.body.cuarto.nrcuarto,
-                                amueblado: req.body.cuarto.amueblado,
-                                ocupado: req.body.cuarto.ocupado,
-                                costo: req.body.cuarto.costo,
-                                tipo: req.body.cuarto.tipo,
-                                costoreserva: req.body.cuarto.costoreserva}}}},
+                    if (cantidad > 0) {
+                        ////Guardar todo los datos anteriores
+                        Residencia.find({ id:req.params.id},'cuartos', function (err, docs) {
+                            if (err) {
+                                res.sendStatus(403);
+                            }
+                            var cuartos_piso=docs[0].cuartos[0].cuartos;
+                            console.log(cuartos_piso);
+                            /*Residencia.findOneAndUpdate({id: req.params.id},
+                                {$push:{cuartos:{Nropiso : req.params.piso , 
+                                        cuartos:[{nrcuarto: req.body.cuarto.nrcuarto,
+                                        amueblado: req.body.cuarto.amueblado,
+                                        ocupado: req.body.cuarto.ocupado,
+                                        costo: req.body.cuarto.costo,
+                                        tipo: req.body.cuarto.tipo,
+                                        costoreserva: req.body.cuarto.costoreserva},
+                                        {nrcuarto: cuartos_piso[0].nrcuarto,
+                                            amueblado: cuartos_piso[0].amueblado,
+                                            ocupado: cuartos_piso[0].ocupado,
+                                            costo: cuartos_piso[0].costo,
+                                            tipo: cuartos_piso[0].tipo,
+                                            costoreserva: cuartos_piso[0].costoreserva}
+                                    ]}}},*/
+                                Residencia.findOneAndUpdate({id: req.params.id},
+                                    {$set:{cuartos:{Nropiso : req.params.piso , 
+                                        cuartos:[{nrcuarto: req.body.cuarto.nrcuarto,
+                                        amueblado: req.body.cuarto.amueblado,
+                                        ocupado: req.body.cuarto.ocupado,
+                                        costo: req.body.cuarto.costo,
+                                        tipo: req.body.cuarto.tipo,
+                                        costoreserva: req.body.cuarto.costoreserva},
+                                    {nrcuarto: cuartos_piso[0].nrcuarto,
+                                        amueblado: cuartos_piso[0].amueblado,
+                                        ocupado: cuartos_piso[0].ocupado,
+                                        costo: cuartos_piso[0].costo,
+                                        tipo: cuartos_piso[0].tipo,
+                                        costoreserva: cuartos_piso[0].costoreserva}]}}},
                                 (err,doc)=>{
                                     if (err) {
                                         res.send({error:err});
                                     } else {
-                                        res.send({mensaje:"OK"});
+                                        res.send(doc.cuartos);
                                     }
                                 });
+                            //res.send(docs[0].cuartos[0]);
+                        });
+                        ////Cambiando
                     } 
                     ///Si Aun No Existe Ya El Piso
                     else {
+                        
                         Residencia.findOneAndUpdate({id: req.params.id},
                             {$push:{cuartos:{Nropiso : req.params.piso , 
                                 cuartos:{nrcuarto: req.body.cuarto.nrcuarto,
