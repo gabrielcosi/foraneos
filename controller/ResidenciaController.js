@@ -86,45 +86,24 @@ exports.CrearCuartos = (req , res )=>{
                             if (err) {
                                 res.sendStatus(403);
                             }
-                            var cuartos_piso=docs[0].cuartos[0].cuartos;
-                            console.log(cuartos_piso);
-                            /*Residencia.findOneAndUpdate({id: req.params.id},
-                                {$push:{cuartos:{Nropiso : req.params.piso , 
-                                        cuartos:[{nrcuarto: req.body.cuarto.nrcuarto,
-                                        amueblado: req.body.cuarto.amueblado,
-                                        ocupado: req.body.cuarto.ocupado,
-                                        costo: req.body.cuarto.costo,
-                                        tipo: req.body.cuarto.tipo,
-                                        costoreserva: req.body.cuarto.costoreserva},
-                                        {nrcuarto: cuartos_piso[0].nrcuarto,
-                                            amueblado: cuartos_piso[0].amueblado,
-                                            ocupado: cuartos_piso[0].ocupado,
-                                            costo: cuartos_piso[0].costo,
-                                            tipo: cuartos_piso[0].tipo,
-                                            costoreserva: cuartos_piso[0].costoreserva}
-                                    ]}}},*/
+                           otrospisos =docs[0].cuartos
+                            for (let index = 0; index < otrospisos.length; index++) {
+                                if (otrospisos[index].Nropiso==req.params.piso) {
+                                    console.log(otrospisos[index])
+                                    otrospisos[index].cuartos.push(newCuarto.cuarto)
+                                    //CuartosAntiguos.push(otrospisos[index]);
+                                }
+                            }
+                            //console.log(docs[0].cuartos[0])
                                 Residencia.findOneAndUpdate({id: req.params.id},
-                                    {$set:{cuartos:{Nropiso : req.params.piso , 
-                                        cuartos:[{nrcuarto: req.body.cuarto.nrcuarto,
-                                        amueblado: req.body.cuarto.amueblado,
-                                        ocupado: req.body.cuarto.ocupado,
-                                        costo: req.body.cuarto.costo,
-                                        tipo: req.body.cuarto.tipo,
-                                        costoreserva: req.body.cuarto.costoreserva},
-                                    {nrcuarto: cuartos_piso[0].nrcuarto,
-                                        amueblado: cuartos_piso[0].amueblado,
-                                        ocupado: cuartos_piso[0].ocupado,
-                                        costo: cuartos_piso[0].costo,
-                                        tipo: cuartos_piso[0].tipo,
-                                        costoreserva: cuartos_piso[0].costoreserva}]}}},
+                                    {$set:{cuartos:otrospisos}},
                                 (err,doc)=>{
                                     if (err) {
                                         res.send({error:err});
                                     } else {
-                                        res.send(doc.cuartos);
+                                        res.send({Mesaje:"OK"});
                                     }
                                 });
-                            //res.send(docs[0].cuartos[0]);
                         });
                         ////Cambiando
                     } 
@@ -143,7 +122,7 @@ exports.CrearCuartos = (req , res )=>{
                             if (err) {
                                 res.send({error:err});
                             } else {
-                                res.send({mensaje:"OK"});
+                                res.send({Mesaje:"OK"});
                             }
                             
                         });

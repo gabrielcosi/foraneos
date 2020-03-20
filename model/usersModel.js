@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var UsersEsquema = mongoose.Schema({
+const UsersEsquema = mongoose.Schema({
     tipo: { type: String, required: true },
     nombre: { type: String, required: true },
     usuario: { type: String, required: true ,unique: true},
