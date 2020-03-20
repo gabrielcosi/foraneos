@@ -16,7 +16,7 @@ const Calificacion = {
 }
 //// Cuartos
 const Cuartos = {
-    nrcuarto : String,
+    nrcuarto : {type : String, require : true ,unique: true},
     amueblado : Boolean,
     ocupado:Boolean,
     costo : Number,

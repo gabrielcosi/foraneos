@@ -131,8 +131,56 @@ exports.CrearCuartos = (req , res )=>{
 	});
 }
 //// Eliminar Cuarto
-
+exports.EliminarCuartos = (req, res) =>{
+    jwt.verify(req.token, SECRET_KEY, (err, data) => {
+		if(err) {
+			res.sendStatus(403);
+		} else {
+            ////Guardar todo los datos anteriores
+            Residencia.find({ id:req.params.id},'cuartos', function (err, docs) {
+                if (err) {
+                    res.sendStatus(403);
+                }
+                otrospisos =docs[0].cuartos
+                var cuartoscorregidos ;
+                var encontrado = false
+                //Agregamos el Nuevo Cuarto al Array Previo
+                for (let index = 0; index < otrospisos.length; index++) {
+                    if (otrospisos[index].Nropiso==req.params.piso) {
+                        for (let i = 0; i < (otrospisos[index].cuartos).length; i++) {
+                            //console.log(otrospisos[index])
+                            if (otrospisos[index].cuartos[i].nrcuarto==req.params.cuarto) {
+                                encontrado = true;
+                                console.log(otrospisos[index].cuartos[i].nrcuarto)
+                                cuartoscorregidos = (otrospisos[index].cuartos).splice(i, 1);
+                                //otrospisos[index].cuartos=
+                            }
+                        }
+                    }
+                }
+                //res.send(cuartoscorregidos);
+                
+                if (encontrado) {
+                    Residencia.findOneAndUpdate({id:req.params.id},
+                    {$set:{cuartos:cuartoscorregidos}},
+                    (err,doc)=>{
+                        if (err) {
+                            res.send({error:err});
+                        } else {
+                            res.send({Mesaje:"OK"});
+                        }
+                    });
+                }else{
+                    res.send({Mesaje:"no se a encontrado"});
+                }
+                
+            });
+		}
+	});
+}
 //// Actualizar Cuarto
+
+//// cambiar el estado Ocupado/Disponible
 
 //// Encontrar Cuarto By Residencia
 
