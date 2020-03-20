@@ -71,15 +71,12 @@ exports.CrearCuartos = (req , res )=>{
 		if(err) {
 			res.sendStatus(403);
 		} else {
-            //contador
-            
-            var contador;
             Residencia.countDocuments({id:req.params.id,"cuartos.Nropiso":req.params.piso},(err,cantidad)=>{
                 if (err) {
                     res.json("mensaje: " + "pues no funco la verdad man");
                 }else{
                     var newCuarto={cuarto:req.body.cuarto};
-                    ///Si Existe Ya El Piso
+                    ///Si Existe Ya El Piso Se Agrega Nomas
                     if (cantidad > 0) {
                         ////Guardar todo los datos anteriores
                         Residencia.find({ id:req.params.id},'cuartos', function (err, docs) {
@@ -87,14 +84,13 @@ exports.CrearCuartos = (req , res )=>{
                                 res.sendStatus(403);
                             }
                            otrospisos =docs[0].cuartos
+                           //Agregamos el Nuevo Cuarto al Array Previo
                             for (let index = 0; index < otrospisos.length; index++) {
                                 if (otrospisos[index].Nropiso==req.params.piso) {
                                     console.log(otrospisos[index])
                                     otrospisos[index].cuartos.push(newCuarto.cuarto)
-                                    //CuartosAntiguos.push(otrospisos[index]);
                                 }
                             }
-                            //console.log(docs[0].cuartos[0])
                                 Residencia.findOneAndUpdate({id: req.params.id},
                                     {$set:{cuartos:otrospisos}},
                                 (err,doc)=>{
@@ -107,7 +103,7 @@ exports.CrearCuartos = (req , res )=>{
                         });
                         ////Cambiando
                     } 
-                    ///Si Aun No Existe Ya El Piso
+                    ///Si Aun No Existe Ya El Piso Se Crea El Piso
                     else {
                         
                         Residencia.findOneAndUpdate({id: req.params.id},
@@ -134,6 +130,8 @@ exports.CrearCuartos = (req , res )=>{
 		}
 	});
 }
+//// Eliminar Cuarto
+
 //// Actualizar Cuarto
 
 //// Encontrar Cuarto By Residencia
