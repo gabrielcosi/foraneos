@@ -141,8 +141,7 @@ exports.EliminarCuartos = (req, res) =>{
                 if (err) {
                     res.sendStatus(403);
                 }
-                otrospisos =docs[0].cuartos
-                var cuartoscorregidos ;
+                otrospisos =docs[0].cuartos;
                 var encontrado = false
                 //Agregamos el Nuevo Cuarto al Array Previo
                 for (let index = 0; index < otrospisos.length; index++) {
@@ -151,18 +150,17 @@ exports.EliminarCuartos = (req, res) =>{
                             //console.log(otrospisos[index])
                             if (otrospisos[index].cuartos[i].nrcuarto==req.params.cuarto) {
                                 encontrado = true;
-                                console.log(otrospisos[index].cuartos[i].nrcuarto)
-                                cuartoscorregidos = (otrospisos[index].cuartos).splice(i, 1);
-                                //otrospisos[index].cuartos=
+                                //console.log(otrospisos[index].cuartos[i]+" "+i)
+                                (otrospisos[index].cuartos).splice(i, 1);
+                                console.log(otrospisos[index].cuartos)
+                                //otrospisos[index].cuartos
                             }
                         }
                     }
                 }
-                //res.send(cuartoscorregidos);
-                
                 if (encontrado) {
                     Residencia.findOneAndUpdate({id:req.params.id},
-                    {$set:{cuartos:cuartoscorregidos}},
+                    {$set:{cuartos:otrospisos}},
                     (err,doc)=>{
                         if (err) {
                             res.send({error:err});
@@ -173,7 +171,6 @@ exports.EliminarCuartos = (req, res) =>{
                 }else{
                     res.send({Mesaje:"no se a encontrado"});
                 }
-                
             });
 		}
 	});
