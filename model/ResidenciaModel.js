@@ -16,7 +16,7 @@ const Calificacion = {
 }
 //// Cuartos
 const Cuartos = {
-    nrcuarto : {type : String, require : true ,unique: true},
+    nrcuarto : {type : String},
     amueblado : Boolean,
     ocupado:Boolean,
     costo : Number,
@@ -31,7 +31,7 @@ var residenciasquema = moongose.Schema({
     propietario : {type : Propietario, require : true ,unique: true},
     cuartos : [{Nropiso:Number,cuartos:[Cuartos]}],
     coordenadas : {type : Coordenadas, require : true ,unique: true},
-    universidad : Number
+    universidad : {type : Number, require : true }
 });
 module.exports = moongose.model("residencia",residenciasquema,"residencia");
 

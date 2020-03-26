@@ -25,15 +25,15 @@ exports.createUser = (req,res,next)=>{
         if (err) {
             console.log(req.body);
             return res.status(500).send('Server error asd '+ err
-            )};
-            const expiresIn = 24 * 60 * 60;
-            const dataUser = {
-                tipo    : user.tipo,
-                nombre  : user.nombre,
-                usuario : user.usuario,
-            }
-            const accessToken = jwt.sign({dataUser},SECRET_KEY,{expiresIn : expiresIn});
-            res.send({accessToken,opciones: user.opciones});
+        )};
+        const expiresIn = 24 * 60 * 60;
+        const dataUser = {
+            tipo    : user.tipo,
+            nombre  : user.nombre,
+            usuario : user.usuario,
+        }
+        const accessToken = jwt.sign({dataUser},SECRET_KEY,{expiresIn : expiresIn});
+        res.send({accessToken,opciones: user.opciones});
     });
 }
 exports.LoginUser = (req , res , next)=>{
@@ -41,7 +41,6 @@ exports.LoginUser = (req , res , next)=>{
         usuario:req.body.usuario,
         contra:req.body.contra
     }
-    console.log(req.body)
     User.findOne({
         usuario:userData.usuario},(err,user)=>{
         if (err) return res.status(500).send('Server error');
@@ -50,7 +49,6 @@ exports.LoginUser = (req , res , next)=>{
         }   else{
             const resultPassword = bcrypt.compareSync(userData.contra , user.contra);
             if (resultPassword) {
-
                 const expiresIn = 24 * 60 * 60;
                 const dataUser = {
                     tipo    : user.tipo,

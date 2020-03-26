@@ -10,8 +10,9 @@ exports.CrearResi = (req, res) => {
             res.sendStatus(403);
         } else {
             Residencia.create(req.body.residencia, (err, doc) => {
+                console.log(req.body.residencia)
                 if (err && err.code === 11000) {
-                    return res.status(409).send('Universidad ya existe')
+                    return res.status(409).send(err)
                 };
                 if (err) { return res.send("falta un campo") };
                 res.send(doc);
@@ -41,27 +42,43 @@ exports.ActualizarResi = (req, res) => {
 }
 
 //// Listar By Universidad
-exports.ListarByUni = (req, res) => {
-
-
-    jwt.verify(req.token, SECRET_KEY, (err, data) => {
-        if (err) {
-            res.sendStatus(403);
-        } else {
-            var id = req.params.id;
-            Residencia.find({ universidad: id }, (err, doc) => {
-                if (err) {
-                    res.send(err)
-                } else {
-                    console.log(id)
-                    res.send(doc);
+exports.ListarByUni = async (req, res) => {
+    try {
+        var cerca = req.params.cerca;
+        var coordenada = req.params.coordenadas
+       // var lat1=coordenadas.latitud;
+        //var lon1=coordenadas.longitud;
+        const residencias = await Residencia.find({ universidad: id });
+        var residenciasordenadas=[]
+        var kilometro = getKilometros(coordenadas.longitus,coordenadas.latitud,coordenada.longitus,coordenada.latitud);
+        if (cerca="usuario") {
+            for (let index = 0; index < residencias.length; index++) {
+                if (con) {
+                    residenciasordenadas.push(residencias[index])
                 }
-
-            });
+            }
+        } else {
+            for (let index = 0; index < residencias.length; index++) {
+                residenciasordenadas.push(residencias[index])
+            }
         }
-    });
+        res.send(residenciasordenadas)
+    } catch (error) {
+        res.send(error)    
+    }
+    
 }
-
+function getKilometros (lat1,lon1,lat2,lon2)
+            {
+                rad = function(x) {return x*Math.PI/180;}
+                var R = 6378.137; //Radio de la tierra en km
+                var dLat = rad( lat2 - lat1 );
+                var dLong = rad( lon2 - lon1 );
+                var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong/2) * Math.sin(dLong/2);
+                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                var d = R * c;
+                return d.toFixed(3); //Retorna tres decimales
+            }
 //// Filtrador
 
 //  SECCION DE CUARTOS
@@ -258,7 +275,7 @@ exports.CambiarEstado = async (req, res) => {
 //// Encontrar Cuarto By Residencia
 
 //// Listar Cuartos
-
+exports.ListarCuartos
 
 //  SECCION COMENTARIOS
 //// Calificar Cuarto
