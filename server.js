@@ -4,11 +4,12 @@ const mongoose = require('mongoose');
 const ResidenciaRouters = require('./Rutas/ResidenciaRouters');
 const authRoutes = require('./auth/authRouters');
 const UniversidadRouters = require('./Rutas/UniversidadRouter');
-const config = require('./config');
+require('dotenv').config();
 
 //configurando la aplicacion con express
 const app = express();
 const router = express.Router();
+const PORT = process.env.PORT || 3000;
 
 const bodyParser = require('body-parser');
 const bodyParserJSON = bodyParser.json();
@@ -27,11 +28,12 @@ router.get('/', (req, res) => {
   res.send('Hello from home');
 });
 app.use(router);
-app.listen(3000);
+
+app.listen(PORT);
 
 //conectando la base de datos
 mongoose.connect(
-  config.cadenaConexion,
+  process.env.CADENA_CONEXION,
   { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
   function(err) {
     if (err) {
