@@ -1,14 +1,10 @@
 const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
-const ResidenciaRouters = require('./Rutas/ResidenciaRouters')
+const ResidenciaRouters = require('./Rutas/ResidenciaRouters');
 const authRoutes = require('./auth/authRouters');
-const UniversidadRouters = require('./Rutas/UniversidadRouter')
+const UniversidadRouters = require('./Rutas/UniversidadRouter');
 const config = require('./config');
-
-
-
-
 
 //configurando la aplicacion con express
 const app = express();
@@ -29,17 +25,19 @@ authRoutes(router);
 ResidenciaRouters(router);
 router.get('/', (req, res) => {
   res.send('Hello from home');
-}); 
+});
 app.use(router);
 app.listen(3000);
 
-
-
 //conectando la base de datos
-mongoose.connect(config.cadenaConexion,function(err){
+mongoose.connect(
+  config.cadenaConexion,
+  { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
+  function(err) {
     if (err) {
-        console.log('error al conectar con la BD')
+      console.log('error al conectar con la BD');
     } else {
-        console.log('conexion exitosa con la BD')
+      console.log('conexion exitosa con la BD');
     }
-})
+  }
+);
