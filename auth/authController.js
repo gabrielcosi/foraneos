@@ -59,9 +59,7 @@ exports.LoginUser = (req, res, next) => {
     (err, user) => {
       if (err) return res.status(500).send('Server error');
       if (!user) {
-        return res
-          .status(409)
-          .send({ message: 'Pucha man te equivocaste en algo' });
+        return res.status(409).send({ message: 'Pucha man eres mongol' });
       } else {
         const resultPassword = bcrypt.compareSync(userData.contra, user.contra);
         if (resultPassword) {
@@ -71,11 +69,9 @@ exports.LoginUser = (req, res, next) => {
             nombre: user.nombre,
             usuario: user.usuario
           };
-          const accessToken = jwt.sign(
-            { dataUser },
-            process.env.process.env.SECRET_KEY,
-            { expiresIn: expiresIn }
-          );
+          const accessToken = jwt.sign({ dataUser }, process.env.SECRET_KEY, {
+            expiresIn: expiresIn
+          });
           res.send({ accessToken, opciones: user.opciones });
         } else {
           //la contra no fue correcta
