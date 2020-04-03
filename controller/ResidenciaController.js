@@ -1,6 +1,7 @@
 const Residencia = require('../model/ResidenciaModel');
+const User = require('../auth/authDao');
 const jwt = require('jsonwebtoken');
-const SECRET_KEY = 'secretkey123';
+const SECRET_KEY = require('../config').SECRET_TOKEN;
 const cuartos = Residencia.piso;
 //  SECCION DE RESIDENCIA
 //// Crear Residencia
@@ -48,9 +49,11 @@ exports.ListarByUni = async (req, res) => {
         var coordenada = req.params.coordenadas
        // var lat1=coordenadas.latitud;
         //var lon1=coordenadas.longitud;
-        const residencias = await Residencia.find({ universidad: id });
-        var residenciasordenadas=[]
-        var kilometro = getKilometros(coordenadas.longitus,coordenadas.latitud,coordenada.longitus,coordenada.latitud);
+        const residencias = await Residencia.find({ universidad: req.params.id });
+        /*var residenciasordenadas=[]
+        //no lo eh comprobado del todo si funciona el algoritmo
+        var kilometro = getKilometros(-11.9890522,-76.8396917,-11.9877445,-76.838319);
+        console.log(kilometro*1000);
         if (cerca="usuario") {
             for (let index = 0; index < residencias.length; index++) {
                 if (con) {
@@ -61,8 +64,8 @@ exports.ListarByUni = async (req, res) => {
             for (let index = 0; index < residencias.length; index++) {
                 residenciasordenadas.push(residencias[index])
             }
-        }
-        res.send(residenciasordenadas)
+        }*/
+        res.send(residencias)
     } catch (error) {
         res.send(error)    
     }
@@ -137,11 +140,8 @@ exports.CrearCuartos = async (req, res) => {
 
 }
 //// Eliminar Cuarto
-exports.EliminarCuartos = (req, res) => {
-    jwt.verify(req.token, SECRET_KEY, async (err, data) => {
-        if (err) {
-            res.sendStatus(403);
-        } else {
+exports.EliminarCuartos = async(req, res) => {
+        await jwt.verify(req.token, SECRET_KEY)
             try {
                 /// buscamos la residencia
                 const residencia = await Residencia.find({ id: req.params.id }, 'cuartos');
@@ -199,10 +199,6 @@ exports.EliminarCuartos = (req, res) => {
             } catch (error) {
                 res.send(error)
             }
-
-
-        }
-    });
 }
 //// Actualizar Cuarto
 exports.ActualizaCuarto = async (req, res) => {
@@ -295,13 +291,13 @@ exports.ListarCuartos
 
 /////////hace la validacion del token
 exports.RevisarToken = (req, res, next) => {
-    console.log('ID:', req.params.iduni);
     const bearerHeader = req.body.accessToken;
     if (typeof bearerHeader !== 'undefined') {
+        const metodo = (req.path.split("/"))[1];
         const bearer = bearerHeader.split(" ");
         const bearerToken = bearer[1];
         req.token = bearerToken;
-        next();
+        next()
     } else {
         res.sendStatus(403);
     }

@@ -1,14 +1,14 @@
 const User = require('./authDao');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const SECRET_KEY = 'secretkey123';
+const SECRET_KEY = require('../config').SECRET_TOKEN;
 
 exports.createUser = (req,res,next)=>{
     var opciones
     if (req.body.tipo=='1') {
-        opciones=["crea_resi","ver","registrar_cuartos","calificar","quitar_comentario"]
+        opciones=["Crear residensia","Registrar Cuartos","Calificar","Quitar Comentario"]
     } else {
-        opciones=["reservar","ver","calificar","quitar_comentarioById","denunciar_comentario"]
+        opciones=["Reservar","Calificar","Eliminar Comentario","Denunciar Comentario"]
     }
     const newUser ={
         tipo : req.body.tipo,

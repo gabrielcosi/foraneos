@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const universidades = require('../model/UniversidadModel')
-const SECRET_KEY = 'secretkey123';
+const SECRET_KEY = require('../config').SECRET_TOKEN;
 /////////////crear universidades
 
 exports.CrearUni = (req,res) =>{
@@ -21,17 +21,15 @@ exports.CrearUni = (req,res) =>{
 
 ///////////listar universidades
 
-exports.ListarUni = (req , res )=>{
-    console.log(req)
-    jwt.verify(req.token, SECRET_KEY, (err, data) => {
-		if(err) {
-			res.sendStatus(403);
-		} else {
-			universidades.find().exec((err,docs)=>{
-				res.send(docs)
-			});
-		}
-	});
+exports.ListarUni = async (req , res )=>{
+    try {
+		await jwt.verify(req.token, SECRET_KEY)
+		universidades.find().exec((err,docs)=>{
+			res.send(docs)
+		});
+	} catch (error) {
+		res.send(error)
+	}
 }
 /////////hace la validacion del token
 exports.RevisarToken = (req , res , next) =>{
