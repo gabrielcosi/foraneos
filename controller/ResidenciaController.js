@@ -1,6 +1,6 @@
-const Residencia = require('../model/ResidenciaModel');
-const User = require('../auth/authDao');
-const jwt = require('jsonwebtoken');
+const Residencia = require("../model/ResidenciaModel");
+const User = require("../auth/authDao");
+const jwt = require("jsonwebtoken");
 const cuartos = Residencia.piso;
 //  SECCION DE RESIDENCIA
 //// Crear Residencia
@@ -15,7 +15,7 @@ exports.CrearResi = (req, res) => {
           return res.status(409).send(err);
         }
         if (err) {
-          return res.send('falta un campo');
+          return res.send("falta un campo");
         }
         res.send(doc);
       });
@@ -30,13 +30,13 @@ exports.ActualizarResi = (req, res) => {
     } else {
       var dato = { $set: { nombre: req.body.residencia.nombre } };
       var id = req.params.iduni;
-      console.log('id :' + id);
+      console.log("id :" + id);
       Residencia.updateMany({ universidad: id }, dato, (err, doc) => {
         if (err) {
           res.send(err);
         } else {
           res.send(
-            'id :' + id + 'se guardo los datos ' + req.body.residencia.nombre
+            "id :" + id + "se guardo los datos " + req.body.residencia.nombre
           );
         }
       });
@@ -73,7 +73,7 @@ exports.ListarByUni = async (req, res) => {
   }
 };
 function getKilometros(lat1, lon1, lat2, lon2) {
-  rad = function(x) {
+  rad = function (x) {
     return (x * Math.PI) / 180;
   };
   var R = 6378.137; //Radio de la tierra en km
@@ -99,7 +99,7 @@ exports.CrearCuartos = async (req, res) => {
     await jwt.verify(req.token, process.env.SECRET_KEY);
     const cantidad = await Residencia.countDocuments({
       id: req.params.id,
-      'cuartos.Nropiso': req.params.piso
+      "cuartos.Nropiso": req.params.piso,
     });
     var newCuarto = { cuarto: req.body.cuarto };
     ///Si Existe Ya El Piso Se Agrega Nomas
@@ -107,7 +107,7 @@ exports.CrearCuartos = async (req, res) => {
       ////Guardar todo los datos anteriores
       const residencia = await Residencia.find(
         { id: req.params.id },
-        'cuartos'
+        "cuartos"
       );
       otrospisos = residencia[0].cuartos;
       //Agregamos el Nuevo Cuarto al Array Previo
@@ -138,18 +138,18 @@ exports.CrearCuartos = async (req, res) => {
                 ocupado: req.body.cuarto.ocupado,
                 costo: req.body.cuarto.costo,
                 tipo: req.body.cuarto.tipo,
-                costoreserva: req.body.cuarto.costoreserva
-              }
-            }
-          }
+                costoreserva: req.body.cuarto.costoreserva,
+              },
+            },
+          },
         }
       );
       funciono = true;
     }
     if (funciono) {
-      res.send({ Mensaje: 'Ok' });
+      res.send({ Mensaje: "Ok" });
     } else {
-      res.send({ Mensaje: 'NoFound' });
+      res.send({ Mensaje: "NoFound" });
     }
   } catch (error) {
     res.send(error);
@@ -160,7 +160,7 @@ exports.EliminarCuartos = async (req, res) => {
   await jwt.verify(req.token, process.env.SECRET_KEY);
   try {
     /// buscamos la residencia
-    const residencia = await Residencia.find({ id: req.params.id }, 'cuartos');
+    const residencia = await Residencia.find({ id: req.params.id }, "cuartos");
     otrospisos = residencia[0].cuartos;
     var encontrado = false;
     ///buscamos el piso donde se desea eliminar el cuarto
@@ -205,14 +205,14 @@ exports.EliminarCuartos = async (req, res) => {
           if (err) {
             res.send({ error: err });
           } else {
-            res.send({ Mesaje: 'OK' });
+            res.send({ Mesaje: "OK" });
           }
         }
       );
     }
     /// mandamos un mensaje de que no es valido el cuarto
     else {
-      res.send({ Mesaje: 'NotFound' });
+      res.send({ Mesaje: "NotFound" });
     }
   } catch (error) {
     res.send(error);
@@ -222,7 +222,7 @@ exports.EliminarCuartos = async (req, res) => {
 exports.ActualizaCuarto = async (req, res) => {
   try {
     await jwt.verify(req.token, process.env.SECRET_KEY);
-    const residencia = await Residencia.find({ id: req.params.id }, 'cuartos');
+    const residencia = await Residencia.find({ id: req.params.id }, "cuartos");
     var newCuarto = { cuarto: req.body.cuarto };
     var encontrado = false;
     var otrospisos = residencia[0].cuartos;
@@ -243,9 +243,9 @@ exports.ActualizaCuarto = async (req, res) => {
       { $set: { cuartos: otrospisos } }
     );
     if (encontrado) {
-      res.send((Mensaje = 'okay'));
+      res.send((Mensaje = "okay"));
     } else {
-      res.send((Mensaje = 'NotFound'));
+      res.send((Mensaje = "NotFound"));
     }
   } catch (error) {
     res.send(error);
@@ -255,11 +255,11 @@ exports.ActualizaCuarto = async (req, res) => {
 exports.CambiarEstado = async (req, res) => {
   try {
     await jwt.verify(req.token, process.env.SECRET_KEY);
-    const residencia = await Residencia.find({ id: req.params.id }, 'cuartos');
+    const residencia = await Residencia.find({ id: req.params.id }, "cuartos");
     var nrcuarto = req.params.cuarto;
     var encontrado = false;
     var otrospisos = residencia[0].cuartos;
-    console.log('hola');
+    console.log("hola");
     //Agregamos el Nuevo Cuarto al Array Previo
     for (let index = 0; index < otrospisos.length; index++) {
       if (otrospisos[index].Nropiso == req.params.piso) {
@@ -282,9 +282,9 @@ exports.CambiarEstado = async (req, res) => {
       { $set: { cuartos: otrospisos } }
     );
     if (encontrado) {
-      res.send((Mensaje = 'okay'));
+      res.send((Mensaje = "okay"));
     } else {
-      res.send((Mensaje = 'NotFound'));
+      res.send((Mensaje = "NotFound"));
     }
   } catch (error) {
     res.send(error);
@@ -307,9 +307,9 @@ exports.ListarCuartos;
 /////////hace la validacion del token
 exports.RevisarToken = (req, res, next) => {
   const bearerHeader = req.body.accessToken;
-  if (typeof bearerHeader !== 'undefined') {
-    const metodo = req.path.split('/')[1];
-    const bearer = bearerHeader.split(' ');
+  if (typeof bearerHeader !== "undefined") {
+    const metodo = req.path.split("/")[1];
+    const bearer = bearerHeader.split(" ");
     const bearerToken = bearer[1];
     req.token = bearerToken;
     next();
